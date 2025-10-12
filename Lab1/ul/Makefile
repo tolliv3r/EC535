@@ -1,0 +1,16 @@
+CC		= gcc
+CFLAGS	= -Wall -Wextra -O2 -std=c11
+
+KDIR ?= $(WORKSPACE)/stock-linux-4.19.82-ti-rt-r33
+PWD  := $(shell pwd)
+
+ARCH ?= arm
+CROSS_COMPILE ?= arm-linux-gnueabihf-
+
+all: ktimer
+
+ktimer: ktimer.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+clean:
+	rm -f ktimer

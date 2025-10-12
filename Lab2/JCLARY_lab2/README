@@ -1,0 +1,10 @@
+Jackson Clary
+jclary@bu.edu
+
+References, Sources, and Help:
+
+https://linux.die.net/lkmpg/
+https://linux-kernel-labs.github.io/refs/heads/master/labs/kernel_modules.html
+
+I referred to the Github repo from my work (UniWest) over the summer where I did a fair bit of Linux Kernel development.
+I used ChatGPT to troubleshoot while I was having errors in the .c files, as well as to fix some cross compiling errors I mistakenly overlooked. 
