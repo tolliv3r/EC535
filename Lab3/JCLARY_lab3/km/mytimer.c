@@ -14,6 +14,7 @@
 #include <linux/seq_file.h>
 
 #include <linux/sched/signal.h>
+#include <linux/device.h>
 
 #define DRV_NAME        "mytimer"
 #define MYTIMER_MAJOR   61
@@ -37,6 +38,8 @@ struct mytimer_dev {
     unsigned long expires_j;             // expiration in jiffies
     unsigned long loaded_j;              // module load time also in jiffies
     struct proc_dir_entry *proc;         // proc entry
+    struct class *class;                 // device class
+    struct device *device;               // device instance
 };
 
 static dev_t devno = MKDEV(MYTIMER_MAJOR, MYTIMER_MINOR);
@@ -56,6 +59,9 @@ static void mytimer_cb(struct timer_list *t)
     d->active = false;
     d->expires_j = 0;
     spin_unlock_irqrestore(&dev_lock, flags);
+
+    // print timer message to kernel log
+    pr_info("TIMER: %s\n", d->msg);
 
     // async notification (SIGIO)
     if (d->async_queue)
@@ -287,6 +293,27 @@ static int __init my_init(void)
         return -ENOMEM;
     }
 
+    // Create device class
+    gdev.class = class_create(THIS_MODULE, DRV_NAME);
+    if (IS_ERR(gdev.class)) {
+        pr_err("mytimer: class_create failed\n");
+        proc_remove(gdev.proc);
+        cdev_del(&my_cdev);
+        unregister_chrdev_region(devno, 1);
+        return PTR_ERR(gdev.class);
+    }
+
+    // Create device file automatically
+    gdev.device = device_create(gdev.class, NULL, devno, NULL, DRV_NAME);
+    if (IS_ERR(gdev.device)) {
+        pr_err("mytimer: device_create failed\n");
+        class_destroy(gdev.class);
+        proc_remove(gdev.proc);
+        cdev_del(&my_cdev);
+        unregister_chrdev_region(devno, 1);
+        return PTR_ERR(gdev.device);
+    }
+
     pr_info("mytimer: loaded (major 61)\n");
     return 0;
 }
@@ -294,6 +321,12 @@ static int __init my_init(void)
 static void __exit my_exit(void)
 {
     del_timer_sync(&gdev.t);
+    
+    // Clean up in reverse order of creation
+    if (gdev.device)
+        device_destroy(gdev.class, devno);
+    if (gdev.class)
+        class_destroy(gdev.class);
     if (gdev.proc)
         proc_remove(gdev.proc);
     cdev_del(&my_cdev);

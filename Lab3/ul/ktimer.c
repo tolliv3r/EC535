@@ -108,7 +108,7 @@ int main(int argc, char **argv)
         {
             if (errno == ENOSPC) {
                 // only one timer supported
-                printf("1 timer(s) already exist(s)!\n");
+                printf("1 timer already exists!\n");
                 close(fd);
                 return 1;
             } else if (errno == EALREADY) {
