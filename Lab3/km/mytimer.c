@@ -293,7 +293,7 @@ static int __init my_init(void)
         return -ENOMEM;
     }
 
-    // Create device class
+    // create device class
     gdev.class = class_create(THIS_MODULE, DRV_NAME);
     if (IS_ERR(gdev.class)) {
         pr_err("mytimer: class_create failed\n");
@@ -303,7 +303,7 @@ static int __init my_init(void)
         return PTR_ERR(gdev.class);
     }
 
-    // Create device file automatically
+    // create device file automatically
     gdev.device = device_create(gdev.class, NULL, devno, NULL, DRV_NAME);
     if (IS_ERR(gdev.device)) {
         pr_err("mytimer: device_create failed\n");
@@ -322,7 +322,7 @@ static void __exit my_exit(void)
 {
     del_timer_sync(&gdev.t);
     
-    // Clean up in reverse order of creation
+    // clean up in reverse order of creation
     if (gdev.device)
         device_destroy(gdev.class, devno);
     if (gdev.class)
