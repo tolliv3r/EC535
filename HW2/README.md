@@ -32,23 +32,21 @@ make clean
 
 ### Performance Optimizations
 
-#### Compilation Optimizations
-- Uses `-std=c99` for consistent, optimized behavior across platforms
-- `-Wall -Wextra` ensures code quality without performance impact
-
 #### Data Structure Optimizations
-- Uses pre-allocated arrays instead of dynamic allocation
-- Uses `uint32_t` for counters and addresses
+- Used pre-allocated arrays instead of dynamic allocation
+- Used `uint32_t` for counters and addresses
 
 #### Algorithm Optimizations
-- Simple O(n) search
-- Skips processing for comments, empty lines, and labels
-- Processes each line only once
+- Simple O(n) search with early exit for faster average lookups
+- Add valid bit tracking in cache simulation for safer and more predictable behavior  
+    - linear search, true hash table maybe doable
+- Skip processing for comments, empty lines, and labels
+- Process each line only once
 
 #### Memory Access Optimizations
-- Uses local arrays instead of heap allocation
-- Uses `strchr()` and `strncpy()` for fast substring extraction
+- Local arrays instead of heap allocation
+- Used `strchr()` and `strncpy()` for fast substring extraction
 - `strcspn()` for efficient newline removal
 
 #### I/O Optimizations
-- Uses `fgets()` with fixed buffer size
+- Used `fgets()` with fixed buffer size
