@@ -1,0 +1,10 @@
+# Large test file for performance testing
+MOV R1, 1
+MOV R2, 1000
+MOV R3, 1000
+ST [R3], R1
+ADD R1, 1
+ADD R3, 1
+CMP R1, R2
+JE 9
+JMP 4

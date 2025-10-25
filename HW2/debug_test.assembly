@@ -1,0 +1,6 @@
+MOV R1, 1
+MOV R2, 3
+CMP R1, R2
+JE 4
+JMP 1
+MOV R3, 5
